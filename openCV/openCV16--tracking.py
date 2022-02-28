@@ -11,6 +11,12 @@ cv2.moveWindow('Trackbars', 1320, 0)
 
 cv2.createTrackbar('hueLower', 'Trackbars', 50, 179, nothing)
 cv2.createTrackbar('hueHigher', 'Trackbars', 100, 179, nothing)
+
+## need more specific to track all red
+
+cv2.createTrackbar('hue2Lower', 'Trackbars', 50, 179, nothing)
+cv2.createTrackbar('hue2Higher', 'Trackbars', 100, 179, nothing)
+
 cv2.createTrackbar('satLow', 'Trackbars', 100, 255, nothing)
 cv2.createTrackbar('satHigh', 'Trackbars', 255, 255, nothing)
 cv2.createTrackbar('valLow', 'Trackbars', 100, 255, nothing)
@@ -18,8 +24,8 @@ cv2.createTrackbar('valHigh', 'Trackbars', 255, 255, nothing)
 
 ## want to keep this aspect ratio
 ## display width/height
-dispW=1280
-dispH=960
+dispW=320
+dispH=240
 
 ## if not 4 camera will be upside down, or horizontally flipped 
 flip = 4
@@ -36,7 +42,8 @@ while True:
     ## ret allows creating the var
     # #frame will get the last picture from the camera
     ret, frame=cam.read()
-    frame = cv2.imread('smarties.png')
+    ## If want to edit smarties png for testing
+    ##frame = cv2.imread('smarties.png')
     ## Grabbing a frame and then showing the frame
     cv2.imshow('piCam', frame)
     cv2.moveWindow('piCam', 0, 0)
@@ -46,6 +53,9 @@ while True:
 
     hueLow = cv2.getTrackbarPos('hueLower', 'Trackbars')
     hueUp = cv2.getTrackbarPos('hueHigher', 'Trackbars')
+
+    hue2Low = cv2.getTrackbarPos('hue2Lower', 'Trackbars')
+    hue2Up = cv2.getTrackbarPos('hue2Higher', 'Trackbars')
 
     Ls = cv2.getTrackbarPos('satLow', 'Trackbars')
     Us = cv2.getTrackbarPos('satHigh', 'Trackbars')
@@ -57,14 +67,29 @@ while True:
     l_b = np.array([hueLow, Ls, Lv])
     u_b = np.array([hueUp, Us, Uv])
 
+    l_b2 = np.array([hue2Low, Ls, Lv])
+    u_b2 = np.array([hue2Up, Us, Uv])
+
     ## Only want the smarties
     FGmask = cv2.inRange(hsv, l_b, u_b)
-    cv2.imshow('FGmask', FGmask)
-    cv2.moveWindow('FGmask', 0, 410)
+    FGmask2 = cv2.inRange(hsv, l_b2, u_b2)
+    FGmaskComp = cv2.add(FGmask, FGmask2)
 
-    FG = cv2.bitwise_and(frame,frame, mask=FGmask)
+    cv2.imshow('FGmaskComp', FGmaskComp)
+    cv2.moveWindow('FGmaskComp', 0, 410)
+
+    FG = cv2.bitwise_and(frame,frame, mask=FGmaskComp)
     cv2.imshow('FG', FG)
     cv2.moveWindow('FG', 480, 0)
+
+    bgMask = cv2.bitwise_not(FGmaskComp)
+    cv2.imshow('bgMask', bgMask)
+    cv2.moveWindow('bgMask', 480, 410)
+
+    BG = cv2.cvtColor(bgMask, cv2.COLOR_GRAY2BGR)
+    final = cv2.add(FG, BG)
+    cv2.imshow('final', final)
+    cv2.moveWindow('final', 900, 0)
     ## checks every ms to see if key is pressed
     if cv2.waitKey(1) ==ord('q'):
         break
