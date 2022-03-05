@@ -24,8 +24,8 @@ cv2.createTrackbar('valHigh', 'Trackbars', 255, 255, nothing)
 
 ## want to keep this aspect ratio
 ## display width/height
-dispW=320
-dispH=240
+dispW=640
+dispH=480
 
 ## if not 4 camera will be upside down, or horizontally flipped 
 flip = 4
@@ -74,7 +74,7 @@ while True:
     FGmaskComp = cv2.add(FGmask, FGmask2)
 
     cv2.imshow('FGmaskComp', FGmaskComp)
-    cv2.moveWindow('FGmaskComp', 0, 410)
+    cv2.moveWindow('FGmaskComp', 0, 500)
 
     ## find the points on the image
     ## use the mask to genearte contours
