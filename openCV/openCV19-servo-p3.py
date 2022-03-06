@@ -14,34 +14,29 @@ servo_offset = 50
 ## set frequency
 pwm.set_pwm_freq(60)
 
+## Left to Right
 pwm.set_pwm(0,0,600)
-time.sleep(2)
+time.sleep(1)
+
+## Right to Left
 pwm.set_pwm(0,0,150)
-time.sleep(2)
+time.sleep(1)
 
-pwm.set_pwm(0,0,150)
-time.sleep(2)
-pwm.set_pwm(0,0,600)
-time.sleep(2)
+while True: 
+    for i in range(servo_min, servo_max, 1):
+        pwm.set_pwm(0,0,i)
+        time.sleep(.01)
 
-pwm.set_pwm(1,0,600)
-time.sleep(2)
-pwm.set_pwm(1,0,150)
-time.sleep(2)
+    for i in range(servo_max, servo_min, -1):
+        pwm.set_pwm(0,0,i)
+        time.sleep(.01)
 
-pwm.set_pwm(1,0,150)
-time.sleep(2)
-pwm.set_pwm(1,0,600)
-time.sleep(2)
+    for i in range(servo_min, servo_max, 1):
+        pwm.set_pwm(1,0,i)
+        time.sleep(.01)
 
+    for i in range(servo_max, servo_min, -1):
+        pwm.set_pwm(1,0,i)
+        time.sleep(.01)
 
-
-
-# while True:
-## move servp pm each channel
-    # for i in range(servo_num):
-    #     pwm.set_pwm(i, 0, servo_max - servo_offset)
-    #     time.sleep(0.4)
-    
-    
 
