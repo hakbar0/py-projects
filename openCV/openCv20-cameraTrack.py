@@ -132,10 +132,10 @@ while True:
 
             ## only move if error is greater that 15
             if(abs(errorX) > 15):
-                pan -= int(round(errorX/50))
+                pan -= int(round(errorX/30))
             ## as tilt is inverted in real life for me   
             if(abs(errorY) > 15):
-                tilt += int(round(errorY/50))
+                tilt += int(round(errorY/30))
 
             if(tilt > up_max):
                 tilt = up_max
