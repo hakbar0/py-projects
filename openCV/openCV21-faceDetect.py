@@ -21,9 +21,24 @@ cam = cv2.VideoCapture(camSet)
 width = cam.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
+## import the face cascade model
+face_cascade=cv2.CascadeClassifier('/home/nvidia/Desktop/py-projects/cascade/face.xml')
+
 while True:
     # #frame will get the last picture from the camera
     ret, frame=cam.read()
+
+    ##convert to grey as less computatial power
+    gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+
+    ##See If i can find a face, returns an array of a box corners
+    ##1.3,5 is setting tolerance
+    ## faces will be a list of arrays
+    faces=face_cascade.detectMultiScale(gray)
+    ## draw rectangles on face
+    ## set colour and line width
+    for(x,y,w,h) in faces:
+        cv2.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
 
     cv2.imshow('piCam', frame)
     cv2.moveWindow('piCam', 0, 0)
