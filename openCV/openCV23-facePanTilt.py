@@ -64,18 +64,51 @@ while True:
     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
-    for (x,y,w,h) in faces
-        xCent= x+dispW/2
-        yCent= y+dispH/2
-        errorPan =xCent-width/2
-        errorTilt = yCent-height/2
+    for (x,y,w,h) in faces:
+        cv2.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
 
-              ## only move if error is greater that 15
+        xCent= x+w/2
+        yCent= y+h/2
+        errorPan =xCent-dispW/2
+        errorTilt = yCent-dispH/2
+
+        ## only move if error is greater that 15
         if abs(errorPan) > 15:
-             pan -= int(round(errorX/30))
-              ## as tilt is inverted in real life for me   
+             pan -= int(round(errorPan/30))
+
+        ## as tilt is inverted in real life for me   
         if(abs(errorTilt) > 15):
              tilt += int(round(errorTilt/30))
+
+        if(tilt > up_max):
+             tilt = up_max
+             print('tilt out of range')
+            
+        if(tilt < up_min):
+             tilt = up_min
+             print('tilt out of range')
+            
+        if(pan > down_max):
+             pan = down_max
+             print('pan out of range')
+
+        if(tilt < down_min):
+             pan = down_min
+             print('pan out of range') 
+
+        pwm.set_pwm(1,0,tilt)
+        pwm.set_pwm(0,0,pan)
+        ## only want to move servo based on largest object not noise
+
+              # To find eyes, we only want to search in the face
+        roi_gray = gray[y:y+h, x:x+w]
+        roi_color = frame[y:y+h, x:x+w]
+        eyes=eye_cascade.detectMultiScale(roi_gray)
+
+        for(xEye, yEye, wEye, hEye) in eyes:
+            cv2.circle(roi_color, (int(xEye+wEye/2),int(yEye+hEye/2)), 7, (255,0,0),-1)
+            cv2.circle(roi_color, (int(xEye+wEye/2),int(yEye+hEye/2)), 3, (0,255,0),-1)
+
         break
 
     cv2.imshow('piCam', frame)
