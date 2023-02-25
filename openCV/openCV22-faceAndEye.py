@@ -42,7 +42,8 @@ while True:
         roi_color = frame[y:y+h, x:x+w]
         eyes=eye_cascade.detectMultiScale(roi_gray)
         for(xEye, yEye, wEye, hEye) in eyes:
-            cv2.rectangle(roi_color, (xEye, yEye), (xEye+wEye,yEye+hEye), (255,0,0),2)
+            cv2.circle(roi_color, (int(xEye+wEye/2),int(yEye+hEye/2)), 7, (255,0,0),-1)
+            cv2.circle(roi_color, (int(xEye+wEye/2),int(yEye+hEye/2)), 3, (0,255,0),-1)
 
     cv2.imshow('piCam', frame)
     cv2.moveWindow('piCam', 0, 0)
