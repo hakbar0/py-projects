@@ -21,9 +21,22 @@ cam = cv2.VideoCapture(camSet)
 width = cam.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
+## import the face cascade model
+face_cascade=cv2.CascadeClassifier('/home/nvidia/Desktop/py-projects/cascade/face.xml')
+
+## import the eye cascade model
+eye_cascade=cv2.CascadeClassifier('/home/nvidia/Desktop/py-projects/cascade/eye.xml')
+
 while True:
     # #frame will get the last picture from the camera
     ret, frame=cam.read()
+    ##convert to grey as less computatial power
+    gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+    
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+    for (x,y,w,h) in faces:
+        cv2.rectangle(frame, (x,y), (x+w, y+y), (0,0,255), 2)
 
     cv2.imshow('piCam', frame)
     cv2.moveWindow('piCam', 0, 0)
