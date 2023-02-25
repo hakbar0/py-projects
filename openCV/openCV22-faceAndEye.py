@@ -37,6 +37,12 @@ while True:
 
     for (x,y,w,h) in faces:
         cv2.rectangle(frame, (x,y), (x+w, y+h), (0,0,255), 2)
+        # To find eyes, we only want to search in the face
+        roi_gray = gray[y:y+h, x:x+w]
+        roi_color = frame[y:y+h, x:x+w]
+        eyes=eye_cascade.detectMultiScale(roi_gray)
+        for(xEye, yEye, wEye, hEye) in eyes:
+            cv2.rectangle(roi_color, (xEye, yEye), (xEye+wEye,yEye+hEye), (255,0,0),2)
 
     cv2.imshow('piCam', frame)
     cv2.moveWindow('piCam', 0, 0)
