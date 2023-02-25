@@ -1,6 +1,8 @@
 import cv2
 print(cv2.__version__)
 
+import numpy as np
+
 import Adafruit_PCA9685
 import time
 
@@ -15,8 +17,8 @@ down_mid = 300 # init pos of camera
 
 
 up_min = 450 # min pulse length
-up_max = 600 # max pulse length
-up_mid = 500 # init pos of camera
+up_max = 650 # max pulse length
+up_mid = 550 # init pos of camera
 
 pan = down_mid
 tilt = up_mid
@@ -26,6 +28,7 @@ pwm.set_pwm_freq(60)
 
 pwm.set_pwm(1,0,up_mid)
 pwm.set_pwm(0,0,down_mid)
+
 
 ## want to keep this aspect ratio
 ## display width/height
@@ -48,7 +51,7 @@ width = cam.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
 while True:
-    # #frame will get the last picture from the camera
+    ## ret allows creating the var
     ret, frame=cam.read()
 
     cv2.imshow('piCam', frame)
